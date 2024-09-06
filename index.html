@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>count-down-timer</title>
+
+
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+  <div class="wrapper" id="time-wrapper">
+    <div class="wrapper__timer">
+      <div class="container">
+        <span><ion-icon class="icon-btn" name="chevron-up-outline"></ion-icon></span>
+        <span name="first" class="time hour">0</span>
+        <span><ion-icon class="icon-btn" name="chevron-down-outline"></ion-icon></span>
+      </div>
+      <div class="container">
+        <span><ion-icon class="icon-btn" name="chevron-up-outline"></ion-icon></span>
+        <span name="second" class="time minus">0</span>
+        <span><ion-icon class="icon-btn" name="chevron-down-outline"></ion-icon></span>
+      </div>
+      <div class="container">
+        <span><ion-icon class="icon-btn" name="chevron-up-outline"></ion-icon></span>
+        <span name="third" class="time seconds">0</span>
+        <span><ion-icon class="icon-btn" name="chevron-down-outline"></ion-icon></span>
+      </div>
+    </div>
+    <div class="wrapper__button">
+      <button name="Add" id="add-alarm">Add</button>
+      <button name="alarm" disabled><ion-icon name="alarm" disabled></ion-icon></button>
+    </div>
+  </div>
+
+  <div class="timer-container" id="timer-container"></div>
+
+  <div class="timer-btn">
+    <button id="timer-btn">
+      <ion-icon name="add-outline"></ion-icon>
+    </button>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
