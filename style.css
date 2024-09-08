@@ -63,7 +63,6 @@ body:has(.hide)::before {
   font-size:3.5rem;
   gap: 10px;
   user-select: none;
-  --webkit-user-select:none;
 }
 
 .container .icon-btn {
@@ -145,13 +144,20 @@ body:has(.hide)::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .counter-container span {
   color: #fff;
   font-size: 60px;
   font-weight: 600;
+}
+.counter-container span:not(:nth-of-type(2),:nth-of-type(4)){
+  max-width: 50px;
+}
+
+.counter-container span:where(:nth-of-type(2),:nth-of-type(4)){
+  margin-left: 15px;
 }
 
 .counter-button{
