@@ -68,11 +68,6 @@ addClick();
 
 // Get the time from the input;
 
-const counterWrapper = document.createElement("div");
-const counterDownTime = document.createElement("div");
-
-counterWrapper.className = "counterWrapper";
-
 let endTime;
 
 function getTimes() {
@@ -91,7 +86,6 @@ function formatGetTime() {
   const timeDifferent = Math.max(Math.round((endTime - currentTime) / 1000));
 
   console.log(timeDifferent);
-
   const formatHour = Math.floor(timeDifferent / 3600);
   const formatminutes = Math.floor((timeDifferent % 3600) / 60);
   const formatSeconds = Math.floor(timeDifferent % 60);
@@ -104,35 +98,15 @@ function formatGetTime() {
   };
 }
 
-function updateTime() {
-  const { formatHour, formatminutes, formatSeconds, timeDifferent } =
-    formatGetTime();
-  const timespans = counterDownTime.querySelectorAll("span");
-  for (const [index, span] of timespans.entries()) {
-    switch (index + 1) {
-      case 1:
-        span.textContent = formatHour.toString().padStart(2, "0");
-        break;
-      case 3:
-        span.textContent = formatminutes.toString().padStart(2, "0");
-        break;
-      case 5:
-        span.textContent = formatSeconds.toString().padStart(2, "0");
-        break;
-      default:
-        break;
-    }
-  }
-  if (timeDifferent < 1) {
-    clearInterval(timeInterval);
-  }
-}
+
 
 // function to store the hour minus and seconds for countDown
 
-function createTime() {
+function createTime(counterWrapper) {
+  const counterDownTime = document.createElement("div");
   counterWrapper.appendChild(counterDownTime);
   counterDownTime.className = "counter-container";
+
 
   const classNameSpan = [
     "hourspan",
@@ -153,11 +127,11 @@ function createTime() {
   }
 }
 
-function createButton() {
+function createButton(counterWrapper) {
   const buttonContainer = document.createElement("div");
   counterWrapper.appendChild(buttonContainer);
-
   buttonContainer.className = "counter-button";
+
   const buttons = [
     '<ion-icon name="trash-outline"></ion-icon>',
     // '<ion-icon name="pause-outline"></ion-icon>',
@@ -167,10 +141,46 @@ function createButton() {
 
   for (let icon of buttons) {
     const button = document.createElement("button");
-    buttonContainer.appendChild(button);
-
     button.innerHTML = icon;
+    buttonContainer.appendChild(button);
   }
+}
+
+function startCountDown() {
+  const counterWrapper = document.createElement("div");
+  counterWrapper.className = "counterWrapper";
+
+  createTime(counterWrapper);
+  createButton(counterWrapper);
+
+
+  function updateTime() {
+    const { formatHour, formatminutes, formatSeconds, timeDifferent } =
+      formatGetTime();
+    const timespans = counterDownTime.querySelectorAll("span");
+    for (const [index, span] of timespans.entries()) {
+      switch (index + 1) {
+        case 1:
+          span.textContent = formatHour.toString().padStart(2, "0");
+          break;
+        case 3:
+          span.textContent = formatminutes.toString().padStart(2, "0");
+          break;
+        case 5:
+          span.textContent = formatSeconds.toString().padStart(2, "0");
+          break;
+        default:
+          break;
+      }
+    }
+    if (timeDifferent < 1) {
+      clearInterval(timeInterval);
+    }
+  }
+
+
+  timerContainer.appendChild(counterWrapper);
+  updateTime()
 }
 
 function initFutureTime() {
@@ -189,8 +199,7 @@ function startTime() {
 }
 
 addAlarm.addEventListener("click", () => {
-  startTime();
-  timerContainer.appendChild(counterWrapper);
+  startCountDown()
 
   timeWrapper.classList.add("hide");
 });
