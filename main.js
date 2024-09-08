@@ -67,94 +67,97 @@ addClick();
 
 // Get the time from the input;
 
-let timeInterval;
-
-function getTimes() {
-  const hours = parseInt(document.querySelector(".hour").textContent),
-    minuts = parseInt(document.querySelector(".minus").textContent),
-    seconds = parseInt(document.querySelector(".seconds").textContent);
-
-  const setTimeSeconds =
-    hours * 60 * 60 * 1000 + minuts * 60 * 1000 + seconds * 1000;
-
-  return { setTimeSeconds };
-}
-
-// format the tiem to count in other
-
-function formatGetTime() {
-  const { setTimeSeconds } = getTimes();
-  const currentTime = new Date().getTime();
-  const futureTime = setTimeSeconds + currentTime;
-  const timeDifferent = (futureTime - currentTime) / 1000;
-
-  console.log(timeDifferent);
-
-  const formatHour = Math.floor(timeDifferent / (60 * 60));
-  const formatminutes = Math.floor((timeDifferent % (60 * 60)) / 60);
-  const formatSeconds = Math.floor(timeDifferent % 60);
-
-  return {
-    formatHour,
-    formatminutes,
-    formatSeconds,
-  };
-}
-
-// create time container and append time from getTime
-
-function setCountDownTime() {
+const setCountDownTime = () => {
   const counterWrapper = document.createElement("div");
+  const counterDownTime = document.createElement("div");
+
   counterWrapper.className = "counterWrapper";
 
-  function updateTime(timeIndex, timeSpan) {
-    const { formatHour, formatminutes, formatSeconds } = formatGetTime();
+  let endTime;
 
-    switch (timeIndex) {
-      case 1:
-        timeSpan.textContent = formatHour.toString().padStart(2, "0");
-        break;
-      case 2:
-        timeSpan.textContent = ":";
-        break;
-      case 3:
-        timeSpan.textContent = formatminutes.toString().padStart(2, "0");
-        break;
-      case 4:
-        timeSpan.textContent = ":";
-        break;
-      case 5:
-        timeSpan.textContent = formatSeconds.toString().padStart(2, "0");
-        break;
-      default:
-        break;
+  function getTimes() {
+    const hours = parseInt(document.querySelector(".hour").textContent),
+      minuts = parseInt(document.querySelector(".minus").textContent),
+      seconds = parseInt(document.querySelector(".seconds").textContent);
+
+    return hours * 60 * 60 * 1000 + minuts * 60 * 1000 + seconds * 1000;
+  }
+
+  // format the tiem to count in other
+  function initFutureTime() {
+    const currentTime = new Data().getTime();
+    endTime = currentTime + getTimes();
+  }
+
+  function formatGetTime() {
+    const currentTime = new Date().getTime();
+
+    const timeDifferent = (endTime - currentTime) / 1000;
+
+    console.log(timeDifferent);
+
+    const formatHour = Math.floor(timeDifferent / 3600);
+    const formatminutes = Math.floor((timeDifferent % 3600) / 60);
+    const formatSeconds = Math.floor(timeDifferent % 60);
+
+    return {
+      formatHour,
+      formatminutes,
+      formatSeconds,
+      timeDifferent,
+    };
+  }
+
+  function updateTime() {
+    const { formatHour, formatminutes, formatSeconds, timeDifferent } =
+      formatGetTime();
+    const timespans = counterDownTime.querySelectorAll("span");
+    for (const [index, span] of timespans.entries()) {
+      switch (index + 1) {
+        case 1:
+          span.textContent = formatHour.toString().padStart(2, "0");
+          break;
+        case 3:
+          span.textContent = formatminutes.toString().padStart(2, "0");
+          break;
+        case 5:
+          span.textContent = formatSeconds.toString().padStart(2, "0");
+          break;
+        default:
+          break;
+      }
+    }
+    if (timeDifferent < 1) {
+      clearInterval(timeInterval);
     }
   }
+
   // function to store the hour minus and seconds for countDown
 
-  function countDown() {
-    const counterDownTime = document.createElement("div");
+  function createTime() {
     counterWrapper.appendChild(counterDownTime);
     counterDownTime.className = "counter-container";
 
     const classNameSpan = [
-      "spanhour",
+      "hourspan",
       "colun-1",
       "minutspan",
       "colun-2",
       "secondsspan",
     ];
 
-    for (let [index, className] of classNameSpan.entries()) {
+    for (let className of classNameSpan) {
       const timeSpan = document.createElement("span");
       timeSpan.className = className;
-      const timeIndex = index + 1;
+
+      if (className.startsWith("col")) {
+        timeSpan.textContent = ":";
+      }
       counterDownTime.appendChild(timeSpan);
-      updateTime(timeIndex, timeSpan)
     }
   }
 
-  function counterButton() {
+  function createButton() {
     const buttonContainer = document.createElement("div");
     counterWrapper.appendChild(buttonContainer);
 
@@ -174,25 +177,26 @@ function setCountDownTime() {
     }
   }
 
-  timerContainer.appendChild(counterWrapper);
+  let timeInterval;
 
-  countDown();
-  counterButton();
-}
+  function startTime() {
+    createTime();
+    initFutureTime;
+    createButton();
+    updateTime();
 
-// add alarm to the body
+    timeInterval = setInterval(updateTime, 1000);
+    timerContainer.appendChild(counterWrapper);
+  }
+
+  return {
+    run: startTime
+  }
+};
 
 addAlarm.addEventListener("click", () => {
-  if (
-    getTimes().formatHour !== 0 ||
-    getTimes().formatminutes !== 0 ||
-    getTimes().formatSeconds !== 0
-  ) {
-    setCountDownTime();
-    timeWrapper.classList.add("hide");
-  } else {
-    alert("time not set");
-  }
+  setCountDownTime.start();
+  timeWrapper.classList.add("hide");
 });
 
 mainBtn.addEventListener("click", () => {
