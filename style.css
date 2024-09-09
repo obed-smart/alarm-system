@@ -136,6 +136,7 @@ body:has(.hide)::before {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #000;
   gap: 15px;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
 }
@@ -145,20 +146,22 @@ body:has(.hide)::before {
   justify-content: center;
   align-items: center;
   gap: 15px;
+  margin-right: 25px;
 }
 
 .counter-container span {
   color: #fff;
   font-size: 60px;
   font-weight: 600;
-}
-.counter-container span:not(:nth-of-type(2),:nth-of-type(4)){
   max-width: 50px;
 }
-
+/* .counter-container span:not(:nth-of-type(2),:nth-of-type(4)){
+  max-width: 50px;
+}
+*/
 .counter-container span:where(:nth-of-type(2),:nth-of-type(4)){
   margin-left: 15px;
-}
+} 
 
 .counter-button{
   display: flex;
