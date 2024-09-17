@@ -58,7 +58,7 @@ function checkClick(event) {
 }
 
 function addClick() {
-  const buttons = document.querySelectorAll(".container  ion-icon");
+  const buttons = document.querySelectorAll(".icon-btn");
 
   for (let button of buttons) {
     button.addEventListener("click", checkClick);
@@ -206,36 +206,7 @@ function startCountDown() {
         }
 
 
-const actionButton = buttonContainer.querySelectorAll("button");
-
-  for (const button of actionButton) {
-    button.addEventListener("click", (event) => {
-      const clickedButton = event.target;
-      if (clickedButton.name === "trash-outline") {
-        clearInterval(timeInterval);
-        counterWrapper.remove();
-      } else if (clickedButton.name === "pause-outline") {
-        remainingTime = Math.max(
-          0,
-          Math.round((endTime - new Date().getTime()) / 1000)
-        );
-        clearInterval(timeInterval);
-        ispause = true;
-        console.log(remainingTime);
-        clickedButton.name = "play-outline";
-      } else if (clickedButton.name === "play-outline") {
-        ispause = false;
-        endTime = new Date().getTime() + remainingTime * 1000;
-        timeInterval = setInterval(updateTime, 1000);
-        clickedButton.name = "pause-outline";
-      } else if (clickedButton.name === "refresh-outline") {
-        clearInterval(timeInterval);
-        endTime = new Date().getTime() - initialTime;
-        timeInterval = setInterval(updateTime, 1000);
-        ispause = false;
-      }
-    });
-  }
+       
       }
 
       if (timeDifferent < 1) {
