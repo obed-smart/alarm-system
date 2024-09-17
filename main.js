@@ -1,4 +1,4 @@
-"use strick";
+"use strict";
 
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
@@ -7,29 +7,28 @@ const timerContainer = document.getElementById("timer-container");
 
 timeWrapper.classList.add("hide");
 
-// format the time to stay within time range(hour, minus, second)
-function formatTime(timespan, value) {
-  if (timespan.classList.contains("hour")) {
-    value = value >= 24 ? 0 : value > 0 ? 23 : value;
-    timespan.textContent = value;
-  }
-
-  if (
-    timespan.classList.contains("minus") ||
-    timespan.classList.contains("seconds")
-  ) {
-    value = value >= 60 ? 0 : value === -1 ? 59 : value;
-
-    // timespan.textContent = ((value % 60) + 60) % 60;
-    timespan.textContent = value;
-  }
-}
-
 // add increament and decreament on the time span
 const setTime = (() => {
-  return {
+  // format the time to stay within time range(hour, minus, second)
+  function formatTime(timespan, value) {
+    if (timespan.classList.contains("hour")) {
+      value = value >= 24 ? 0 : value < 0 ? 23 : value;
+      timespan.textContent = value;
+    }
 
-    // increment 
+    if (
+      timespan.classList.contains("minus") ||
+      timespan.classList.contains("seconds")
+    ) {
+      value = value >= 60 ? 0 : value === -1 ? 59 : value;
+
+      // timespan.textContent = ((value % 60) + 60) % 60;
+      timespan.textContent = value;
+    }
+  }
+
+  return {
+    // increment
     increment: (timespan) => {
       let settime = parseInt(timespan.textContent);
       settime++;
@@ -59,7 +58,7 @@ function checkClick(event) {
 }
 
 function addClick() {
-  const buttons = document.querySelectorAll(".icon-btn");
+  const buttons = document.querySelectorAll(".container  ion-icon");
 
   for (let button of buttons) {
     button.addEventListener("click", checkClick);
@@ -67,6 +66,39 @@ function addClick() {
 }
 
 addClick();
+
+// get the selected time and convert them to miniseconds
+function getTimes() {
+  const hours = parseInt(document.querySelector(".hour").textContent),
+    minuts = parseInt(document.querySelector(".minus").textContent),
+    seconds = parseInt(document.querySelector(".seconds").textContent);
+
+  return hours * 60 * 60 * 1000 + minuts * 60 * 1000 + seconds * 1000;
+}
+
+/*
+ * @function
+ * @returns{endTime}
+ * format te selected time and convert the future time to seconds
+ * format the hour to end at 0 and return to minutes
+ * format the minutes to end at 0 and return to second
+ */
+function formatGetTime(endTime) {
+  const currentTime = new Date().getTime();
+
+  const timeDifferent = Math.max(Math.round((endTime - currentTime) / 1000), 0); // calculate the time different from the current time
+  console.log(timeDifferent);
+  const formatHour = Math.floor(timeDifferent / 3600); // format hour
+  const formatminutes = Math.floor((timeDifferent % 3600) / 60); // format minutes
+  const formatSeconds = Math.floor(timeDifferent % 60); // format seconds
+
+  return {
+    formatHour,
+    formatminutes,
+    formatSeconds,
+    timeDifferent,
+  };
+}
 
 // create the span for hour , minutes , seconds and the collons
 
@@ -95,66 +127,38 @@ function createTime() {
   return countDownTime;
 }
 
+let ispause = false;
+let remainingTime;
+let initialTime;
+
 // create all the action buttons
 // playButon/pauseButton
 // resetButton
 // deleteButton
 
-function createButton() {
+function createButton(counterWrapper, timeInterval, updateTime, endTime) {
   const buttonContainer = document.createElement("div");
+  counterWrapper.appendChild(buttonContainer);
   buttonContainer.className = "counter-button";
 
   const buttons = [
     '<ion-icon name="trash-outline"></ion-icon>',
-    // '<ion-icon name="pause-outline"></ion-icon>',
-    '<ion-icon name="play-outline"></ion-icon>',
+    '<ion-icon name="pause-outline"></ion-icon>',
     '<ion-icon name="refresh-outline"></ion-icon>',
   ];
 
   for (let icon of buttons) {
     const button = document.createElement("button");
     button.innerHTML = icon;
+
     buttonContainer.appendChild(button);
   }
 
-  return buttonContainer;
-}
-
-// get the selected time and convert them to miniseconds
-function getTimes() {
-  const hours = parseInt(document.querySelector(".hour").textContent),
-    minuts = parseInt(document.querySelector(".minus").textContent),
-    seconds = parseInt(document.querySelector(".seconds").textContent);
-
-  return hours * 60 * 60 * 1000 + minuts * 60 * 1000 + seconds * 1000;
-}
-
-/*
- * @function
- * @returns{endTime}
- * format te selected time and convert the future time to seconds
- * format the hour to end at 0 and return to minutes
- * format the minutes to end at 0 and return to second
- */
-function formatGetTime(endTime) {
-  const currentTime = new Date().getTime();
-
-  const timeDifferent = Math.max(Math.round((endTime - currentTime) / 1000), 0); // calculate the time different from the current time
-
-  const formatHour = Math.floor(timeDifferent / 3600); // format hour
-  const formatminutes = Math.floor((timeDifferent % 3600) / 60); // format minutes
-  const formatSeconds = Math.floor(timeDifferent % 60); // format seconds
-
-  return {
-    formatHour,
-    formatminutes,
-    formatSeconds,
-    timeDifferent,
-  };
 }
 
 function initEndtime() {
-  return new Date().getTime() + getTimes(); // return endtime value
+  initialTime = getTimes();
+  return new Date().getTime() + initialTime; // return endtime value
 }
 
 function startCountDown() {
@@ -162,15 +166,13 @@ function startCountDown() {
   counterWrapper.className = "counterWrapper";
 
   const countDownTime = createTime(); // call the createTime function and append it to counterwrapper
-  const buttonContainer = createButton(); // call the createButton function and append it to counterwrapper
+  // call the createButton function and append it to counterwrapper
 
-  counterWrapper.append(countDownTime, buttonContainer);
-  
+  counterWrapper.appendChild(countDownTime);
 
   let endTime = initEndtime(); // set the endTime to initEndtime function at the top
 
   let timeInterval; // initialize setInterval
-
 
   /*
   * update the display on each counterWraper
@@ -179,39 +181,77 @@ function startCountDown() {
      formatGetTime() function and display it dynamically to all counterwrapper
   */
   function updateTime() {
-    const { formatHour, formatminutes, formatSeconds, timeDifferent } =
-      formatGetTime(endTime); // call the formatGetTime function and its return value
+    // call the formatGetTime function and its return value
+    if (!ispause) {
+      const { formatHour, formatminutes, formatSeconds, timeDifferent } =
+        formatGetTime(endTime);
+      // select all direct span of each countDownTime and set time on each one dynamically
 
-    // select all direct span of each countDownTime and set time on each one dynamically
+      const timespans = countDownTime.querySelectorAll(
+        ".counter-container > span"
+      );
+      for (const [index, span] of timespans.entries()) {
+        switch (index + 1) {
+          case 1:
+            span.textContent = formatHour.toString().padStart(2, "0"); // set hour
+            break;
+          case 3:
+            span.textContent = formatminutes.toString().padStart(2, "0"); // set minutes
+            break;
+          case 5:
+            span.textContent = formatSeconds.toString().padStart(2, "0"); // set seconds
+            break;
+          default:
+            break;
+        }
 
-    const timespans = countDownTime.querySelectorAll(
-      ".counter-container > span"
-    );
-    for (const [index, span] of timespans.entries()) {
-      switch (index + 1) {
-        case 1:
-          span.textContent = formatHour.toString().padStart(2, "0"); // set hour
-          break;
-        case 3:
-          span.textContent = formatminutes.toString().padStart(2, "0"); // set minutes
-          break;
-        case 5:
-          span.textContent = formatSeconds.toString().padStart(2, "0"); // set seconds
-          break;
-        default:
-          break;
+
+const actionButton = buttonContainer.querySelectorAll("button");
+
+  for (const button of actionButton) {
+    button.addEventListener("click", (event) => {
+      const clickedButton = event.target;
+      if (clickedButton.name === "trash-outline") {
+        clearInterval(timeInterval);
+        counterWrapper.remove();
+      } else if (clickedButton.name === "pause-outline") {
+        remainingTime = Math.max(
+          0,
+          Math.round((endTime - new Date().getTime()) / 1000)
+        );
+        clearInterval(timeInterval);
+        ispause = true;
+        console.log(remainingTime);
+        clickedButton.name = "play-outline";
+      } else if (clickedButton.name === "play-outline") {
+        ispause = false;
+        endTime = new Date().getTime() + remainingTime * 1000;
+        timeInterval = setInterval(updateTime, 1000);
+        clickedButton.name = "pause-outline";
+      } else if (clickedButton.name === "refresh-outline") {
+        clearInterval(timeInterval);
+        endTime = new Date().getTime() - initialTime;
+        timeInterval = setInterval(updateTime, 1000);
+        ispause = false;
+      }
+    });
+  }
+      }
+
+      if (timeDifferent < 1) {
+        clearInterval(timeInterval); // stop the time
+        ispause = true;
       }
     }
-
+    return;
     // Check if timeDifferent is less than 1 to stop the countdown
-
-    if (timeDifferent < 1) {
-      clearInterval(timeInterval); // stop the time
-    }
   }
 
-  timeInterval = setInterval(updateTime, 1000); // set countDown interval to 1 seconds
+  timeInterval = setInterval(() => {
+    updateTime();
+  }, 1000); // set countDown interval to 1 seconds
 
+  createButton(counterWrapper, timeInterval, updateTime, endTime);
   timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
 
   updateTime();
@@ -220,7 +260,6 @@ function startCountDown() {
 // create a new timer dynamically on each click
 addAlarm.addEventListener("click", () => {
   startCountDown(); // call the startcountDown function to update the time
-
   timeWrapper.classList.add("hide"); // hide  the select time Element
 });
 
