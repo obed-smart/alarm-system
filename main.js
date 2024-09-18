@@ -153,7 +153,7 @@ function createButton(counterWrapper, updateTime) {
     button.addEventListener("click", (event) => {
       const clickButton = event.currentTarget;
       let clickicon = clickButton.querySelector("ion-icon");
-      let pauseStartTime, resumeStartTime;
+      const currentTime = new Date().getTime()
 
       if (clickicon.name === "trash-outline") {
         clearInterval(timeInterval)
@@ -162,23 +162,22 @@ function createButton(counterWrapper, updateTime) {
       } else if (clickicon.name == "pause-outline") {
         clearInterval(timeInterval);
         ispause = true;
-        pauseStartTime = Date.now();
-        console.log(pauseStartTime);
-
-        remainingTime = Math.max(0, Math.round(endTime - pauseStartTime));
+       remainingTime = Math.max(0, Math.round(endTime - currentTime));
         clickicon.name = "play-outline";
+        updateTime()
         return;
       } else if (clickicon.name == "play-outline") {
         ispause = false;
-        resumeStartTime = Date.now();
-        endTime = resumeStartTime + remainingTime;
+        endTime = currentTime + remainingTime;
         timeInterval = setInterval(updateTime, 1000);
         clickicon.name = "pause-outline";
+        updateTime()
         return;
       } else if (clickicon.name === "refresh-outline") {
         ispause = false;
         endTime = initEndtime();
         timeInterval = setInterval(updateTime, 1000);
+        return
       }
     });
     buttonContainer.appendChild(button);
