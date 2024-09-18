@@ -1,5 +1,3 @@
-"use strict";
-
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
 const addAlarm = document.getElementById("add-alarm");
@@ -127,16 +125,17 @@ function createTime() {
   return countDownTime;
 }
 
-let ispause = false;
-let remainingTime;
-let initialTime;
+let ispause = false,
+  remainingTime,
+  endTime,
+  timeInterval;
 
 // create all the action buttons
 // playButon/pauseButton
 // resetButton
 // deleteButton
 
-function createButton(counterWrapper, timeInterval, updateTime, endTime) {
+function createButton(counterWrapper, updateTime) {
   const buttonContainer = document.createElement("div");
   counterWrapper.appendChild(buttonContainer);
   buttonContainer.className = "counter-button";
@@ -151,13 +150,44 @@ function createButton(counterWrapper, timeInterval, updateTime, endTime) {
     const button = document.createElement("button");
     button.innerHTML = icon;
 
+    button.addEventListener("click", (event) => {
+      const clickButton = event.currentTarget;
+      let clickicon = clickButton.querySelector("ion-icon");
+      let pauseStartTime, resumeStartTime;
+
+      if (clickicon.name === "trash-outline") {
+        clearInterval(timeInterval)
+        ispause = true;
+        counterWrapper.remove();
+      } else if (clickicon.name == "pause-outline") {
+        clearInterval(timeInterval);
+        ispause = true;
+        pauseStartTime = Date.now();
+        console.log(pauseStartTime);
+
+        remainingTime = Math.max(0, Math.round(endTime - pauseStartTime));
+        clickicon.name = "play-outline";
+        return;
+      } else if (clickicon.name == "play-outline") {
+        ispause = false;
+        resumeStartTime = Date.now();
+        endTime = resumeStartTime + remainingTime;
+        timeInterval = setInterval(updateTime, 1000);
+        clickicon.name = "pause-outline";
+        return;
+      } else if (clickicon.name === "refresh-outline") {
+        ispause = false;
+        endTime = initEndtime();
+        timeInterval = setInterval(updateTime, 1000);
+      }
+    });
     buttonContainer.appendChild(button);
   }
-
 }
 
 function initEndtime() {
-  initialTime = getTimes();
+  const initialTime = getTimes();
+
   return new Date().getTime() + initialTime; // return endtime value
 }
 
@@ -170,9 +200,8 @@ function startCountDown() {
 
   counterWrapper.appendChild(countDownTime);
 
-  let endTime = initEndtime(); // set the endTime to initEndtime function at the top
-
-  let timeInterval; // initialize setInterval
+  endTime = initEndtime(); // set the endTime to initEndtime function at the top
+  console.log(`end ${endTime}`); // initialize setInterval
 
   /*
   * update the display on each counterWraper
@@ -204,9 +233,6 @@ function startCountDown() {
           default:
             break;
         }
-
-
-       
       }
 
       if (timeDifferent < 1) {
@@ -222,7 +248,7 @@ function startCountDown() {
     updateTime();
   }, 1000); // set countDown interval to 1 seconds
 
-  createButton(counterWrapper, timeInterval, updateTime, endTime);
+  createButton(counterWrapper, updateTime);
   timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
 
   updateTime();
