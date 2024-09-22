@@ -149,8 +149,8 @@ function createButton(counterWrapper, buttonContainer) {
   }
 }
 
-function handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTime) {
-  const buttons = buttonContainer.querySelectorAll(".actionBtn");
+function handleButtonClicks(timerState, updateTime) {
+  const buttons = timerState.buttonContainer.querySelectorAll(".actionBtn");
   for (const button of buttons) {
     button.addEventListener("click", (event) => {
       const clickButton = event.currentTarget;
@@ -160,15 +160,16 @@ function handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTi
       if (clickicon.name === "trash-outline") {
         clearInterval(timerState.timeInterval);
         timerState.ispause = true;
-        counterWrapper.remove();
+        timerState.counterWrapper.remove();
       } else if (clickicon.name == "pause-outline") {
         clearInterval(timerState.timeInterval);
-        timerState.ispaus = true;
+        timerState.ispause = true;
         timerState.remainingTime = Math.max(0, Math.round(timerState.endTime - currentTime));
         clickicon.name = "play-outline";
         updateTime();
         return;
       } else if (clickicon.name == "play-outline") {
+        clearInterval(timerState.timeIntervalIn)
         timerState.ispause = false;
         timerState.endTime = currentTime + timerState.remainingTime;
         timerState.timeInterval = setInterval(updateTime, 1000);
@@ -176,19 +177,17 @@ function handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTi
         updateTime();
         return;
       } else if (clickicon.name === "refresh-outline") {
-        timerState.ispaus = false;
-        timerState.endTime = initEndtime();
+        clearInterval(timerState.timeInterval)
+        timerState.ispause = false;
+        timerState.currentTime = new Date().getTime()
+        timerState.endTime = timerState.currentTime + timerState.initialTime
+        updateTime()
         timerState.timeInterval = setInterval(updateTime, 1000);
-        return;
       }
     });
   }
 }
 
-function initEndtime() {
-  const initialTime = getTimes();
-  return new Date().getTime() + initialTime; // return endtime value
-}
 
 function startCountDown() {
   const counterWrapper = document.createElement("div");
@@ -201,19 +200,28 @@ function startCountDown() {
 
   counterWrapper.appendChild(countDownTime);
 
+
   const timerState = {
+    counterWrapper: counterWrapper,
+    buttonContainer: buttonContainer,
+    currentTime: new Date().getTime(),
     ispause: false,
     remainingTime: null,
-    endTime: null,
+    initialTime: getTimes(),
     timeInterval: null,
+    endTime: null,
+
+    initEndtime() {
+      return this.endTime = this.currentTime + this.initialTime;
+    }
   };
 
-  timerState.endTime = initEndtime();
+  timerState.initEndtime();
 
   function updateTime() {
     if (!timerState.ispause) {
       const { formatHour, formatminutes, formatSeconds, timeDifferent } =
-        formatGetTime(timerState.endTime);
+      formatGetTime(timerState.endTime);
 
       const timespans = countDownTime.querySelectorAll(
         ".counter-container > span"
@@ -234,9 +242,15 @@ function startCountDown() {
         }
       }
 
-      if (timerState.timeDifferent < 1) {
+      if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
+
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            alert('granted')
+          }
+        })
       }
     }
     return;
@@ -249,7 +263,7 @@ function startCountDown() {
 
   createButton(counterWrapper, buttonContainer);
 
-  handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTime);
+  handleButtonClicks(timerState, updateTime);
   updateTime();
   timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
 }
