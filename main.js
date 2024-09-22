@@ -245,12 +245,7 @@ function startCountDown() {
       if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
-
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            alert('granted')
-          }
-        })
+return
       }
     }
     return;
@@ -270,7 +265,8 @@ function startCountDown() {
 
 // create a new timer dynamically on each click
 addAlarm.addEventListener("click", () => {
-  startCountDown(); // call the startcountDown function to update the time
+    startCountDown(); // call the startcountDown function to update the time
+  
   timeWrapper.classList.add("hide"); // hide  the select time Element
 });
 
