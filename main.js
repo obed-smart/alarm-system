@@ -125,18 +125,12 @@ function createTime() {
   return countDownTime;
 }
 
-let ispause = false,
-  remainingTime,
-  endTime,
-  timeInterval;
-
 // create all the action buttons
 // playButon/pauseButton
 // resetButton
 // deleteButton
 
-function createButton(counterWrapper, updateTime) {
-  const buttonContainer = document.createElement("div");
+function createButton(counterWrapper, buttonContainer) {
   counterWrapper.appendChild(buttonContainer);
   buttonContainer.className = "counter-button";
 
@@ -149,49 +143,57 @@ function createButton(counterWrapper, updateTime) {
   for (let icon of buttons) {
     const button = document.createElement("button");
     button.innerHTML = icon;
+    button.className = "actionBtn";
 
+    buttonContainer.appendChild(button);
+  }
+}
+
+function handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTime) {
+  const buttons = buttonContainer.querySelectorAll(".actionBtn");
+  for (const button of buttons) {
     button.addEventListener("click", (event) => {
       const clickButton = event.currentTarget;
       let clickicon = clickButton.querySelector("ion-icon");
-      const currentTime = new Date().getTime()
+      const currentTime = new Date().getTime();
 
       if (clickicon.name === "trash-outline") {
-        clearInterval(timeInterval)
-        ispause = true;
+        clearInterval(timerState.timeInterval);
+        timerState.ispause = true;
         counterWrapper.remove();
       } else if (clickicon.name == "pause-outline") {
-        clearInterval(timeInterval);
-        ispause = true;
-       remainingTime = Math.max(0, Math.round(endTime - currentTime));
+        clearInterval(timerState.timeInterval);
+        timerState.ispaus = true;
+        timerState.remainingTime = Math.max(0, Math.round(timerState.endTime - currentTime));
         clickicon.name = "play-outline";
-        updateTime()
+        updateTime();
         return;
       } else if (clickicon.name == "play-outline") {
-        ispause = false;
-        endTime = currentTime + remainingTime;
-        timeInterval = setInterval(updateTime, 1000);
+        timerState.ispause = false;
+        timerState.endTime = currentTime + timerState.remainingTime;
+        timerState.timeInterval = setInterval(updateTime, 1000);
         clickicon.name = "pause-outline";
-        updateTime()
+        updateTime();
         return;
       } else if (clickicon.name === "refresh-outline") {
-        ispause = false;
-        endTime = initEndtime();
-        timeInterval = setInterval(updateTime, 1000);
-        return
+        timerState.ispaus = false;
+        timerState.endTime = initEndtime();
+        timerState.timeInterval = setInterval(updateTime, 1000);
+        return;
       }
     });
-    buttonContainer.appendChild(button);
   }
 }
 
 function initEndtime() {
   const initialTime = getTimes();
-
   return new Date().getTime() + initialTime; // return endtime value
 }
 
 function startCountDown() {
   const counterWrapper = document.createElement("div");
+  const buttonContainer = document.createElement("div");
+
   counterWrapper.className = "counterWrapper";
 
   const countDownTime = createTime(); // call the createTime function and append it to counterwrapper
@@ -199,21 +201,19 @@ function startCountDown() {
 
   counterWrapper.appendChild(countDownTime);
 
-  endTime = initEndtime(); // set the endTime to initEndtime function at the top
-  console.log(`end ${endTime}`); // initialize setInterval
+  const timerState = {
+    ispause: false,
+    remainingTime: null,
+    endTime: null,
+    timeInterval: null,
+  };
 
-  /*
-  * update the display on each counterWraper
+  timerState.endTime = initEndtime();
 
-  * this function retrieves the current time value from the
-     formatGetTime() function and display it dynamically to all counterwrapper
-  */
   function updateTime() {
-    // call the formatGetTime function and its return value
-    if (!ispause) {
+    if (!timerState.ispause) {
       const { formatHour, formatminutes, formatSeconds, timeDifferent } =
-        formatGetTime(endTime);
-      // select all direct span of each countDownTime and set time on each one dynamically
+        formatGetTime(timerState.endTime);
 
       const timespans = countDownTime.querySelectorAll(
         ".counter-container > span"
@@ -234,23 +234,24 @@ function startCountDown() {
         }
       }
 
-      if (timeDifferent < 1) {
-        clearInterval(timeInterval); // stop the time
-        ispause = true;
+      if (timerState.timeDifferent < 1) {
+        clearInterval(timerState.timeInterval); // stop the time
+        timerState.ispause = true;
       }
     }
     return;
     // Check if timeDifferent is less than 1 to stop the countdown
   }
 
-  timeInterval = setInterval(() => {
+  timerState.timeInterval = setInterval(() => {
     updateTime();
   }, 1000); // set countDown interval to 1 seconds
 
-  createButton(counterWrapper, updateTime);
-  timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
+  createButton(counterWrapper, buttonContainer);
 
+  handleButtonClicks(counterWrapper,buttonContainer, timerState, updateTime);
   updateTime();
+  timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
 }
 
 // create a new timer dynamically on each click
