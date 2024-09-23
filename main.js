@@ -1,3 +1,5 @@
+import {handleButtonClicks} from './function.js';
+
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
 const addAlarm = document.getElementById("add-alarm");
@@ -149,44 +151,6 @@ function createButton(counterWrapper, buttonContainer) {
   }
 }
 
-function handleButtonClicks(timerState, updateTime) {
-  const buttons = timerState.buttonContainer.querySelectorAll(".actionBtn");
-  for (const button of buttons) {
-    button.addEventListener("click", (event) => {
-      const clickButton = event.currentTarget;
-      let clickicon = clickButton.querySelector("ion-icon");
-      const currentTime = new Date().getTime();
-
-      if (clickicon.name === "trash-outline") {
-        clearInterval(timerState.timeInterval);
-        timerState.ispause = true;
-        timerState.counterWrapper.remove();
-      } else if (clickicon.name == "pause-outline") {
-        clearInterval(timerState.timeInterval);
-        timerState.ispause = true;
-        timerState.remainingTime = Math.max(0, Math.round(timerState.endTime - currentTime));
-        clickicon.name = "play-outline";
-        updateTime();
-        return;
-      } else if (clickicon.name == "play-outline") {
-        clearInterval(timerState.timeIntervalIn)
-        timerState.ispause = false;
-        timerState.endTime = currentTime + timerState.remainingTime;
-        timerState.timeInterval = setInterval(updateTime, 1000);
-        clickicon.name = "pause-outline";
-        updateTime();
-        return;
-      } else if (clickicon.name === "refresh-outline") {
-        clearInterval(timerState.timeInterval)
-        timerState.ispause = false;
-        timerState.currentTime = new Date().getTime()
-        timerState.endTime = timerState.currentTime + timerState.initialTime
-        updateTime()
-        timerState.timeInterval = setInterval(updateTime, 1000);
-      }
-    });
-  }
-}
 
 
 function startCountDown() {
@@ -245,7 +209,12 @@ function startCountDown() {
       if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
-return
+        if (navigator.vibrate) {
+          navigator.vibrate(500); // vibrates for 500 milliseconds
+        } else {
+          console.log('not supported')
+        }
+        return
       }
     }
     return;
@@ -265,8 +234,8 @@ return
 
 // create a new timer dynamically on each click
 addAlarm.addEventListener("click", () => {
-    startCountDown(); // call the startcountDown function to update the time
-  
+  startCountDown(); // call the startcountDown function to update the time
+
   timeWrapper.classList.add("hide"); // hide  the select time Element
 });
 
