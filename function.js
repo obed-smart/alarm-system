@@ -17,22 +17,20 @@ export function handleButtonClicks(timerState, updateTime) {
         timerState.remainingTime = Math.max(0, Math.round(timerState.endTime - timerState.currentTime));
         clickicon.name = "play-outline";
         updateTime();
-        return;
       } else if (clickicon.name == "play-outline") {
-        clearInterval(timerState.timeIntervalIn)
+        clearInterval(timerState.timeInterval)
         timerState.ispause = false;
         timerState.endTime = timerState.currentTime + timerState.remainingTime;
         timerState.timeInterval = setInterval(updateTime, 1000);
         clickicon.name = "pause-outline";
         updateTime();
-        return;
       } else if (clickicon.name === "refresh-outline") {
         clearInterval(timerState.timeInterval)
         timerState.ispause = false;
         timerState.currentTime = new Date().getTime()
         timerState.endTime = timerState.currentTime + timerState.initialTime
         updateTime()
-        timerState.timeInterval = setInterval(updateTime, 1000);
+        // timerState.timeInterval = setInterval(updateTime, 1000);
       }
     });
   }
