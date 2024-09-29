@@ -1,5 +1,4 @@
-import {handleButtonClicks} from './function.js';
-
+import { handleButtonClicks } from './function.js';
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
 const addAlarm = document.getElementById("add-alarm");
@@ -20,7 +19,7 @@ const setTime = (() => {
       timespan.classList.contains("minus") ||
       timespan.classList.contains("seconds")
     ) {
-      value = value >= 60 ? 0 : value === -1 ? 59 : value;
+      value = value === 60 ? 0 : value === -1 ? 59 : value;
 
       // timespan.textContent = ((value % 60) + 60) % 60;
       timespan.textContent = value;
@@ -132,8 +131,8 @@ function createTime() {
 // resetButton
 // deleteButton
 
-function createButton(counterWrapper, buttonContainer) {
-  counterWrapper.appendChild(buttonContainer);
+function createButton() {
+  const buttonContainer = document.createElement("div");
   buttonContainer.className = "counter-button";
 
   const buttons = [
@@ -149,20 +148,20 @@ function createButton(counterWrapper, buttonContainer) {
 
     buttonContainer.appendChild(button);
   }
+  
+  return buttonContainer;
 }
-
 
 
 function startCountDown() {
   const counterWrapper = document.createElement("div");
-  const buttonContainer = document.createElement("div");
 
   counterWrapper.className = "counterWrapper";
 
-  const countDownTime = createTime(); // call the createTime function and append it to counterwrapper
-  // call the createButton function and append it to counterwrapper
+  const countDownTime = createTime(), // call the createTime function and append it to counterwrapper
+    buttonContainer = createButton(); // call the createButton function and append it to counterwrapper
 
-  counterWrapper.appendChild(countDownTime);
+  counterWrapper.append(countDownTime, buttonContainer);
 
 
   const timerState = {
@@ -181,6 +180,7 @@ function startCountDown() {
   };
 
   timerState.initEndtime();
+  
 
   function updateTime() {
     if (!timerState.ispause) {
@@ -209,12 +209,9 @@ function startCountDown() {
       if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
-        if (navigator.vibrate) {
-          navigator.vibrate(500); // vibrates for 500 milliseconds
-        } else {
-          console.log('not supported')
-        }
-        return
+        
+        audio.play()
+        
       }
     }
     return;
@@ -224,8 +221,6 @@ function startCountDown() {
   timerState.timeInterval = setInterval(() => {
     updateTime();
   }, 1000); // set countDown interval to 1 seconds
-
-  createButton(counterWrapper, buttonContainer);
 
   handleButtonClicks(timerState, updateTime);
   updateTime();
