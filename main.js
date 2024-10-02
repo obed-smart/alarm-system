@@ -1,4 +1,5 @@
-import { handleButtonClicks } from './function.js';
+import { handleButtonClicks } from "./function.js";
+
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
 const addAlarm = document.getElementById("add-alarm");
@@ -19,7 +20,7 @@ const setTime = (() => {
       timespan.classList.contains("minus") ||
       timespan.classList.contains("seconds")
     ) {
-      value = value === 60 ? 0 : value === -1 ? 59 : value;
+      value = value >= 60 ? 0 : value === -1 ? 59 : value;
 
       // timespan.textContent = ((value % 60) + 60) % 60;
       timespan.textContent = value;
@@ -131,8 +132,8 @@ function createTime() {
 // resetButton
 // deleteButton
 
-function createButton() {
-  const buttonContainer = document.createElement("div");
+function createButton(counterWrapper, buttonContainer) {
+  counterWrapper.appendChild(buttonContainer);
   buttonContainer.className = "counter-button";
 
   const buttons = [
@@ -148,21 +149,18 @@ function createButton() {
 
     buttonContainer.appendChild(button);
   }
-  
-  return buttonContainer;
 }
-
 
 function startCountDown() {
   const counterWrapper = document.createElement("div");
+  const buttonContainer = document.createElement("div");
 
   counterWrapper.className = "counterWrapper";
 
-  const countDownTime = createTime(), // call the createTime function and append it to counterwrapper
-    buttonContainer = createButton(); // call the createButton function and append it to counterwrapper
+  const countDownTime = createTime(); // call the createTime function and append it to counterwrapper
+  // call the createButton function and append it to counterwrapper
 
-  counterWrapper.append(countDownTime, buttonContainer);
-
+  counterWrapper.appendChild(countDownTime);
 
   const timerState = {
     counterWrapper: counterWrapper,
@@ -175,17 +173,16 @@ function startCountDown() {
     endTime: null,
 
     initEndtime() {
-      return this.endTime = this.currentTime + this.initialTime;
-    }
+      return (this.endTime = this.currentTime + this.initialTime);
+    },
   };
 
   timerState.initEndtime();
-  
 
   function updateTime() {
     if (!timerState.ispause) {
       const { formatHour, formatminutes, formatSeconds, timeDifferent } =
-      formatGetTime(timerState.endTime);
+        formatGetTime(timerState.endTime);
 
       const timespans = countDownTime.querySelectorAll(
         ".counter-container > span"
@@ -209,9 +206,9 @@ function startCountDown() {
       if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
-        
-        audio.play()
-        
+
+        const audio = new Audio("/sound/Mercury .m4a");
+        audio.play();
       }
     }
     return;
@@ -222,6 +219,8 @@ function startCountDown() {
     updateTime();
   }, 1000); // set countDown interval to 1 seconds
 
+  createButton(counterWrapper, buttonContainer);
+
   handleButtonClicks(timerState, updateTime);
   updateTime();
   timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
@@ -230,7 +229,6 @@ function startCountDown() {
 // create a new timer dynamically on each click
 addAlarm.addEventListener("click", () => {
   startCountDown(); // call the startcountDown function to update the time
-
   timeWrapper.classList.add("hide"); // hide  the select time Element
 });
 

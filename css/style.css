@@ -1,3 +1,5 @@
+@import url('/css/global/fonts.css');
+
 * {
   margin: 0;
   padding: 0;
@@ -11,6 +13,7 @@ body {
   position: relative;
   font-family: "Space Grotesk", sans-serif;
 }
+
 
 body::before {
   content: "";
@@ -96,21 +99,19 @@ body:has(.hide)::before {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
-.wrapper__button button[name="alarm"] {
+.button__alarm  {
   background-color: transparent;
   border: none;
   position: absolute;
   right: 2rem;
 }
 
-.wrapper__button button> :where(ion-icon) {
+.button__alarm label ion-icon {
   color: #fff;
   font-size: 3rem
 }
 
-.wrapper__button button:disabled> :where(ion-icon) {
-  color: #ccc;
-}
+
 
 .timer-container {
   height: 70vh;
@@ -126,7 +127,6 @@ body:has(.hide)::before {
 
 .counterWrapper {
   width: 90%;
-  /* height: 20vh; */
   margin-inline: auto;
   background-color: #6469A6;
   text-align: center;
@@ -134,8 +134,8 @@ body:has(.hide)::before {
   border-radius: 10px;
   display: flex;
   justify-content: center;
+  align-items: center;;
   flex-direction: column;
-  align-items: center;
   gap: 15px;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
 }
