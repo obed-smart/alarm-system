@@ -9,13 +9,16 @@
   <title>count-down-timer</title>
 
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/css/style.css">
+
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  
+
+  <script type="module" src="main.js"></script>
+
 </head>
+
 <body>
   <div class="wrapper" id="time-wrapper">
     <div class="wrapper__timer">
@@ -37,7 +40,32 @@
     </div>
     <div class="wrapper__button">
       <button name="Add" id="add-alarm">Add</button>
-      <button name="alarm" disabled><ion-icon name="alarm" disabled></ion-icon></button>
+      <div class="button__alarm"> 
+        <label name="alarm" for="alarm-sound" ><ion-icon name="alarm" disabled></ion-icon></label>
+        <select name="alarm" id="alarm-sound">
+          <option value="">
+            <audio src="/sound/Arpeggio.m4a">Arpeggio</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Dollop .m4a">Dollop</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Mercury .m4a">Mercury</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Night owl .m4a">Night owl</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Old car horn.m4a">Old car horn</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Old phone .m4a">Old phone</audio>
+          </option>
+          <option value="">
+            <audio src="/sound/Radar.m4a">Radar</audio>
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -48,7 +76,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
   </div>
-<script src="main.js"></script>
+  
 </body>
 
 </html>
