@@ -21,7 +21,7 @@
 
 <body>
   <div class="wrapper" id="time-wrapper">
-    <div class="wrapper__timer">
+    <section class="wrapper__timer">
       <div class="container">
         <span><ion-icon class="icon-btn" name="chevron-up-outline"></ion-icon></span>
         <span name="first" class="time hour">0</span>
@@ -37,36 +37,24 @@
         <span name="third" class="time seconds">0</span>
         <span><ion-icon class="icon-btn" name="chevron-down-outline"></ion-icon></span>
       </div>
-    </div>
-    <div class="wrapper__button">
+    </section>
+    
+    <section class="wrapper__button">
       <button name="Add" id="add-alarm">Add</button>
       <div class="button__alarm"> 
         <label name="alarm" for="alarm-sound" ><ion-icon name="alarm" disabled></ion-icon></label>
-        <select name="alarm" id="alarm-sound">
-          <option value="">
-            <audio src="/sound/Arpeggio.m4a">Arpeggio</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Dollop .m4a">Dollop</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Mercury .m4a">Mercury</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Night owl .m4a">Night owl</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Old car horn.m4a">Old car horn</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Old phone .m4a">Old phone</audio>
-          </option>
-          <option value="">
-            <audio src="/sound/Radar.m4a">Radar</audio>
-          </option>
+        <select name="alarm" id="alarm-sound" class="alarm-sound">
+          <option value="/sound/Arpeggio.m4a">Arpeggio</option>
+          <option value="/sound/Dollop .m4a">Dollop</option>
+          <option value="/sound/Mercury .m4a">Mercury</option>
+          <option value="/sound/Night owl .m4a">Night</option>
+          <option value="/sound/Old car horn.m4a">Old car horn</option>
+          <option value="/sound/Old phone .m4a">Old phone</option>
+          <option value="/sound/Radar.m4a">Radar</option>
         </select>
       </div>
-    </div>
+    </section>
+    
   </div>
 
   <div class="timer-container" id="timer-container"></div>
