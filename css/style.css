@@ -19,7 +19,6 @@ body::before {
   content: "";
   position: absolute;
   width: 100%;
-  ;
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   z-index: 500;
@@ -111,8 +110,16 @@ body:has(.hide)::before {
   font-size: 3rem
 }
 
+<<<<<<< HEAD
 .button__alarm .alarm__sounds{
 display: inline-block;
+=======
+.button__alarm .alarm-sound{
+  position: absolute;
+  transform: scale(0,0);
+  z-index: 9999;
+  right: 3rem;
+>>>>>>> 191911ffda2a627a11ffd514901eb150fc7cf8f1
 }
 
 .timer-container {
