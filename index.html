@@ -13,7 +13,7 @@
 
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-  
+
 
   <script type="module" src="main.js"></script>
 
@@ -40,21 +40,25 @@
     </div>
     <div class="wrapper__button">
       <button name="Add" id="add-alarm">Add</button>
-      <div class="button__alarm"> 
-        <label name="alarm" for="alarm-sound" ><ion-icon name="alarm" disabled></ion-icon></label>
-        <select name="alarm" id="alarm-sound">
+      <div class="button__alarm">
+        <label name="alarm" for="alarm-sound"><ion-icon name="alarm"></ion-icon></label>
+        <select name="alarm" id="alarm-sound" class="alarm__sounds">
           <option value="">
             <audio src="/sound/Arpeggio.m4a">Arpeggio</audio>
           </option>
+
           <option value="">
             <audio src="/sound/Dollop .m4a">Dollop</audio>
           </option>
+
           <option value="">
             <audio src="/sound/Mercury .m4a">Mercury</audio>
           </option>
+
           <option value="">
             <audio src="/sound/Night owl .m4a">Night owl</audio>
           </option>
+
           <option value="">
             <audio src="/sound/Old car horn.m4a">Old car horn</audio>
           </option>
@@ -76,7 +80,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
   </div>
-  
+
 </body>
 
 </html>

@@ -111,7 +111,9 @@ body:has(.hide)::before {
   font-size: 3rem
 }
 
-
+.button__alarm .alarm__sounds{
+display: inline-block;
+}
 
 .timer-container {
   height: 70vh;
