@@ -207,8 +207,7 @@ function startCountDown() {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
 
-        const audio = new Audio("/sound/Mercury .m4a");
-        audio.play();
+
       }
     }
     return;

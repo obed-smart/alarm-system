@@ -1,4 +1,4 @@
-export function handleButtonClicks(timerState, updateTime) {
+export  function handleButtonClicks(timerState, updateTime) {
     const buttons = timerState.buttonContainer.querySelectorAll(".actionBtn");
     for (const button of buttons) {
       button.addEventListener("click", (event) => {

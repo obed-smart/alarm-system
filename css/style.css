@@ -87,7 +87,7 @@ body:has(.hide)::before {
   position: relative;
 }
 
-.wrapper__button button[name="Add"] {
+.wrapper__button button{
   background-color: #6469A6;
   color: #fff;
   font-size: 2rem;
@@ -105,22 +105,16 @@ body:has(.hide)::before {
   right: 2rem;
 }
 
-.button__alarm label ion-icon {
+.alarm-label ion-icon {
   color: #fff;
-  font-size: 3rem
+  font-size: 3rem;
+  cursor: pointer;
 }
 
-<<<<<<< HEAD
-.button__alarm .alarm__sounds{
-display: inline-block;
-=======
 .button__alarm .alarm-sound{
-  position: absolute;
-  transform: scale(0,0);
-  z-index: 9999;
-  right: 3rem;
->>>>>>> 191911ffda2a627a11ffd514901eb150fc7cf8f1
+
 }
+
 
 .timer-container {
   height: 70vh;
