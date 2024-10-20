@@ -1,4 +1,4 @@
-import { handleButtonClicks } from "./function.js";
+import { handleButtonClicks, changePausePlayBtn } from "./function.js";
 
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
@@ -136,10 +136,9 @@ function createButton(counterWrapper, buttonContainer) {
   counterWrapper.appendChild(buttonContainer);
 
   const buttons = [
-
     '<ion-icon name="trash-outline"></ion-icon>',
-    '<ion-icon name="pause-outline" data-action="pause-outline"></ion-icon>',
-    '<ion-icon name="refresh-outline"></ion-icon>'
+    '<ion-icon name="pause-outline" id="pause-outline"></ion-icon>',
+    '<ion-icon name="refresh-outline"></ion-icon>',
   ];
 
   for (let icon of buttons) {
@@ -147,8 +146,6 @@ function createButton(counterWrapper, buttonContainer) {
     button.innerHTML = icon;
     button.className = "actionBtn";
     buttonContainer.appendChild(button);
-    console.log(icon);
-    
   }
 }
 
@@ -208,6 +205,7 @@ function startCountDown() {
       if (timeDifferent === 0) {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
+        changePausePlayBtn();
       }
     }
     return;
@@ -221,7 +219,7 @@ function startCountDown() {
   createButton(counterWrapper, buttonContainer);
 
   buttonContainer.addEventListener("click", (Event) =>
-    handleButtonClicks(Event,timerState, updateTime)
+    handleButtonClicks(Event, timerState, updateTime)
   );
   updateTime();
   timerContainer.appendChild(counterWrapper); // Append the counterwrapper to the timecontainer (HTML)
