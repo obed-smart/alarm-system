@@ -1,5 +1,3 @@
-const currentTime = new Date().getTime();
-
 // function to delete the timer from the Dom
 
 function deleteTimer(timerState) {
@@ -10,7 +8,7 @@ function deleteTimer(timerState) {
 
 //function to stop the timer if it is playing
 
-function pauseTimer(icon, timerState, updateTime) {
+function pauseTimer(currentTime, icon, timerState, updateTime) {
   clearInterval(timerState.timeInterval);
   timerState.ispause = true;
   timerState.remainingTime = Math.max(
@@ -24,7 +22,7 @@ function pauseTimer(icon, timerState, updateTime) {
 
 //function to start  the timer if it is paused
 
-function playTimer(icon, timerState, updateTime) {
+function playTimer(currentTime, icon, timerState, updateTime) {
   clearInterval(timerState.timeIntervalIn);
   timerState.ispause = false;
   timerState.endTime = currentTime + timerState.remainingTime;
@@ -36,11 +34,11 @@ function playTimer(icon, timerState, updateTime) {
 
 //function to reset the timer to its initial state at the beginning
 
-function resetTimer(timerState, updateTime) {
+function resetTimer(currentTime, timerState, updateTime) {
   clearInterval(timerState.timeInterval);
   timerState.ispause = false;
   timerState.currentTime = new Date().getTime();
-  timerState.endTime = timerState.currentTime + timerState.initialTime;
+  timerState.endTime = currentTime + timerState.initialTime;
   updateTime();
   timerState.timeInterval = setInterval(updateTime, 1000);
   changePlayPauseBtn();
@@ -56,7 +54,7 @@ function getPlayPauseBtnState() {
   return { playPauseBtn, currentButtonState };
 }
 
-//function to change the button state from play to pause icon 
+//function to change the button state from play to pause icon
 function changePlayPauseBtn() {
   const { playPauseBtn, currentButtonState } = getPlayPauseBtnState();
 
@@ -65,9 +63,9 @@ function changePlayPauseBtn() {
   }
 }
 
-//function to change the button state from pause to play icon 
+//function to change the button state from pause to play icon
 
- export function changePausePlayBtn() {
+export function changePausePlayBtn() {
   const { playPauseBtn, currentButtonState } = getPlayPauseBtnState();
 
   if (currentButtonState === "pause-outline") {
@@ -76,6 +74,8 @@ function changePlayPauseBtn() {
 }
 
 export function handleButtonClicks(event, timerState, updateTime) {
+  const currentTime = new Date().getTime();
+
   const icon = event.target.closest("ion-icon"),
     currentName = icon.getAttribute("name");
 
@@ -85,15 +85,15 @@ export function handleButtonClicks(event, timerState, updateTime) {
       break;
 
     case "pause-outline":
-      pauseTimer(icon, timerState, updateTime);
+      pauseTimer(currentTime, icon, timerState, updateTime);
       break;
 
     case "play-outline":
-      playTimer(icon, timerState, updateTime);
+      playTimer(currentTime, icon, timerState, updateTime);
       break;
 
     case "refresh-outline":
-      resetTimer(timerState, updateTime);
+      resetTimer(currentTime, timerState, updateTime);
       break;
 
     default:
