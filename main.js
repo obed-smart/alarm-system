@@ -1,4 +1,8 @@
-import { handleButtonClicks, changePausePlayBtn } from "./function.js";
+import {
+  handleButtonClicks,
+  changePausePlayBtn,
+  checkSelect
+} from "./function.js";
 
 const timeWrapper = document.getElementById("time-wrapper");
 const mainBtn = document.getElementById("timer-btn");
@@ -206,6 +210,8 @@ function startCountDown() {
         clearInterval(timerState.timeInterval); // stop the time
         timerState.ispause = true;
         changePausePlayBtn();
+        const audio = checkSelect();
+        audio.play();
       }
     }
     return;

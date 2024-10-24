@@ -75,13 +75,15 @@ export function changePausePlayBtn() {
 
 export function handleButtonClicks(event, timerState, updateTime) {
   const currentTime = new Date().getTime();
-
   const icon = event.target.closest("ion-icon"),
     currentName = icon.getAttribute("name");
 
   switch (currentName) {
     case "trash-outline":
       deleteTimer(timerState);
+      const audio = checkSelect();
+      audio.pause();
+
       break;
 
     case "pause-outline":
@@ -101,3 +103,37 @@ export function handleButtonClicks(event, timerState, updateTime) {
       break;
   }
 }
+
+export function checkSelect() {
+  const audioPath = document.getElementById("select").value,
+    audio = new Audio(audioPath);
+  audio.loop = true;
+  if (navigator.vibrate) {
+    navigator.vibrate([500, 100, 500, 100, 500, 100, 500]);
+  }
+  return audio;
+}
+
+// function checktheme() {
+//   const prefersSystemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+//   prefersSystemTheme.addEventListener('change', checktheme);
+//   if (prefersSystemTheme.matches) {
+//     document.body.classList.add('dark')
+//   } else {
+//     document.body.classList.remove('dark')
+//   }
+// };
+
+// checktheme()
+// const themeBtn = document.querySelectorAll('#theme');
+// for (let button of themeBtn) {
+//   const buttonName = button.name
+//   button.addEventListener('click', () => {
+//     if (buttonName === 'default')
+//       checktheme()
+//     if (buttonName === 'lightTheme')
+//       document.body.classList.remove('dark');
+//     if (buttonName === 'darkTheme')
+//       document.body.classList.add('dark')
+//   })
+// }

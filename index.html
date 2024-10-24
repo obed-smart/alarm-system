@@ -40,19 +40,21 @@
     </section>
 
     <section class="wrapper__button">
-      <button name="Add" id="add-alarm">Add</button>
+      <div>
+        <button name="Add" id="add-alarm">Add</button>
+      </div>
       <div class="button__alarm">
-        <label for="alarm-sound" class="alarm-label" id="alarm-label">
+        <label for="select" class="alarm-label" id="alarm-label">
           <ion-icon name="alarm"></ion-icon>
         </label>
-        <select name="alarm" id="alarm-sound" class="alarm-sound">
-          <option value="/sound/Arpeggio.m4a">Arpeggio</option>
-          <option value="/sound/Dollop.m4a">Dollop</option>
-          <option value="/sound/Mercury.m4a">Mercury</option>
-          <option value="/sound/Night owl.m4a">Night</option>
-          <option value="/sound/Old car horn.m4a">Old car horn</option>
-          <option value="/sound/Old phone.m4a">Old phone</option>
-          <option value="/sound/Radar.m4a">Radar</option>
+        <select id="select" class="alarm-sound">
+          <option value="./sound/Arpeggio.m4a">Arpeggio</option>
+          <option value="./sound/Dollop.m4a">Dollop</option>
+          <option value="./sound/Mercury.m4a">Mercury</option>
+          <option value="./sound/Night owl.m4a">Night</option>
+          <option value="./sound/Old car horn.m4a">Old car horn</option>
+          <option value="./sound/Old phone.m4a">Old phone</option>
+          <option value="./sound/Radar.m4a">Radar</option>
         </select>
       </div>
     </section>
@@ -68,7 +70,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
   </div>
-  <script>
+  <!-- <script>
     // Get the label and the select elements
     const alarmLabel = document.querySelector('label[for="alarm-sound"]');
     const alarmSelect = document.getElementById('alarm-sound');
@@ -78,7 +80,7 @@
       alarmSelect.focus()
       alarmLabel.click(); // Open the dropdown
     });
-  </script>
+  </script> -->
 </body>
 
 </html>
